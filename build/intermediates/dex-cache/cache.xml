@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ilgaz\.android\build-cache\37c7def061664d74ab636b7af05975745cb0d2b8\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="7ed87c7f833e46dacace668e63cb8c4b67cb3172">
+        <dex dex="C:\Users\Ilgaz\AndroidStudioProjects\XLockscreen\app\build\intermediates\pre-dexed\debug\classes_c7ff3825f6d6ed22f4243e40405419878b0fc501.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Ilgaz\AndroidStudioProjects\XLockscreen\localeapi\build\intermediates\bundles\default\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="a93a69c1a2045ba5ed3ce62e5abb24260ade4d6e">
+        <dex dex="C:\Users\Ilgaz\AndroidStudioProjects\XLockscreen\app\build\intermediates\pre-dexed\debug\classes_bf7bd4ba256cb10a2d77fb825b4f3511bb19a505.jar" />
+    </item>
+
+</items>
