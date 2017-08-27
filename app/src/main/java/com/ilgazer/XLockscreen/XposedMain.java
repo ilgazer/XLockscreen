@@ -10,21 +10,17 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 
 import com.crossbowffs.remotepreferences.RemotePreferences;
 import com.ilgazer.XLockscreen.ui.EditActivity;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -48,6 +44,8 @@ public class XposedMain implements IXposedHookLoadPackage {
     private static boolean useBitmapCircle = true;
     private static HashMap<String, Object> fieldMap = new HashMap<>();
     private static boolean undoColorChange;
+    //Triggers making size seem low via a decorator class on list
+    private static boolean hideNextPatternNumber = false;
 
 //    @Override
 //    public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
@@ -108,11 +106,22 @@ public class XposedMain implements IXposedHookLoadPackage {
             final Class patternViewClass = XposedHelpers.findClass("com.android.internal.widget.LockPatternView", lpparam.classLoader);
             notHooked = false;
             XposedHelpers.findAndHookMethod(
-                    "com.android.internal.widget.LockPatternView",
-                    lpparam.classLoader, "notifyPatternDetected",
+                    patternViewClass, "notifyPatternDetected",
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+//                            ViewParent viewParent=((View)param.thisObject).getParent();
+//                            while(!viewParent.getClass().getName().equals("com.android.internal.policy.impl.keyguard.KeyguardPatternView")) {
+//                                viewParent=viewParent.getParent();
+//                            }
+//                            log(Constants.LOG_TAG +" Keyguard: "+ viewParent.getClass().getName());
+//                            Object mCallback=XposedHelpers.getObjectField(viewParent,"mCallback");
+//                            Object mCallbackWrapper =getCallbackProxy(mCallback);
+//                            if(!Proxy.isProxyClass(mCallback.getClass())) {
+//                                XposedHelpers.setObjectField(viewParent, "mCallback", mCallbackWrapper);
+//                            }
+
+
                             Paint mPaint = null;
                             try {
                                 XposedHelpers.findField(patternViewClass, "mBitmapCircleRed");
@@ -159,20 +168,25 @@ public class XposedMain implements IXposedHookLoadPackage {
                                         log(Constants.LOG_TAG + "task=" + taskRaw + "," + Arrays.toString(task));
                                         color = Integer.parseInt(task[1]);
                                         //mBitmapCircleRed rengini değiştirsek nolur
+                                        break;
+                                    case "nofail":
+                                        hideNextPatternNumber = true;
+                                        break;
+//                                    case "resetfail":
+//                                        Class updateMonitorClass = XposedHelpers.findClass("com.android.internal.policy.impl.keyguard.KeyguardUpdateMonitor", param.thisObject.getClass().getClassLoader());
+//                                        Object updateMonitor = XposedHelpers.callStaticMethod(updateMonitorClass, "getInstance", c);
+//                                        XposedHelpers.callMethod(updateMonitor, "clearFailedUnlockAttempts");
+//                                        log(Constants.LOG_TAG + " Cleared unlock attempts.");
 //                                        break;
-//                                    case "clearFails":
-                                        ViewParent viewParent=((View)param.thisObject).getParent();
-                                        while(!viewParent.getClass().getName().equals("com.android.internal.policy.impl.keyguard.KeyguardPatternView"))
-                                            viewParent=viewParent.getParent();
-                                        log(Constants.LOG_TAG +" Keyguard: "+ viewParent.getClass().getName());
-                                        Object mCallback=XposedHelpers.getObjectField(viewParent,"mCallback");
-                                        log(Constants.LOG_TAG +" Keyguard: "+ viewParent.getClass().getName());
+                                    default:
+                                        log(Constants.LOG_TAG + " Unrecognised task: " + task[0]);
+                                        break;
+                                }
+                            }
 //                                        XposedHelpers.callMethod(mCallback, "reportSuccessfulUnlockAttempt");
 //                                        List old=pattern.subList(0, 3);
 //                                        pattern.clear();
 //                                        pattern.addAll(old);
-                                }
-                            }
                             if (useBitmapCircle && mPaint != null) {
                                 if (color != null) {
                                     XposedHelpers.setObjectField(param.thisObject, "mBitmapCircleRed", changeBitmapColor(mBitmapCircleRed, color));
@@ -204,6 +218,15 @@ public class XposedMain implements IXposedHookLoadPackage {
 //                                else if(!after.equals(fieldMap.get(field)))
 //                                    XposedBridge.log(Constants.LOG_TAG + " Field '" + field + " 'changed from '" +fieldMap.get(field).toString()+"' to '"+ after.toString());
 //                            }
+                        }
+                    });
+
+            XposedHelpers.findAndHookMethod(patternViewClass,
+                    "setOnPatternListener", XposedHelpers.findClass("com.android.internal.widget.LockPatternView$OnPatternListener", lpparam.classLoader),
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            param.args[0]=PatternListenerDecorator.getProxy(param.args[0]);
                         }
                     });
 
@@ -250,7 +273,7 @@ public class XposedMain implements IXposedHookLoadPackage {
 //                                case "tasker":
 //                                    final int numEntered = pref.getInt("ret_" + patternEntered, 0);
 //
-//                                    log(Constants.LOG_TAG + "NUM_ENTERED " + numEntered);
+//                                    log(Constants.LOG_TAG + " NUM_ENTERED " + numEntered);
 //                                    SharedPreferences.Editor editor = pref.edit();
 //                                    editor.putInt("ret_" + patternEntered, numEntered + 1);
 //                                    editor.apply();
@@ -285,6 +308,55 @@ public class XposedMain implements IXposedHookLoadPackage {
         canvas.drawBitmap(resultBitmap, 0, 0, paint);
         return resultBitmap;
     }
-    
+
+    private static class PatternListenerDecorator implements InvocationHandler {
+        final Object inner;
+
+        public static Object getProxy(Object o) {
+            return Proxy.newProxyInstance(o.getClass().getClassLoader(), o.getClass().getInterfaces(), new PatternListenerDecorator(o));
+        }
+
+        private PatternListenerDecorator(Object inner) {
+            this.inner = inner;
+        }
+
+        @Override
+        public Object invoke(Object o, Method method, Object[] args) throws Throwable {
+            if (hideNextPatternNumber && method.getName().equals("onPatternDetected")) {
+                hideNextPatternNumber = false;
+                log(Constants.LOG_TAG + " Replaced list with decorated for onPatternDetected.");
+                return method.invoke(inner, PatternListDecorator.getProxy((List) args[0]));
+            }
+//            log(Constants.LOG_TAG + " " + method.getName() + " with args: " + Arrays.toString(args));
+            return method.invoke(inner, args);
+        }
+    }
+
+    private static class PatternListDecorator implements InvocationHandler {
+        final List inner;
+        final int lieAt;
+        int lieIndex = 0;
+
+        static Object getProxy(List o) {
+            return Proxy.newProxyInstance(List.class.getClassLoader(), new Class[]{List.class}, new PatternListDecorator(o, 3));
+        }
+
+        private PatternListDecorator(List inner, int lieAt) {
+            this.inner = inner;
+            this.lieAt = lieAt;
+        }
+
+        @Override
+        public Object invoke(Object o, Method method, Object[] args) throws Throwable {
+            if (method.getName().equals("size")) {
+                lieIndex++;
+                if (lieAt == lieIndex) {
+                    return 3;
+                }
+            }
+//            log(Constants.LOG_TAG + " " + method.getName() + " with args: " + Arrays.toString(args));
+            return method.invoke(inner, args);
+        }
+    }
 
 }

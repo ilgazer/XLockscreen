@@ -17,6 +17,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.CheckBox;
 
 import com.andrognito.patternlockview.PatternLockView;
 import com.andrognito.patternlockview.listener.PatternLockViewListener;
@@ -132,7 +133,12 @@ public final class PatternActivity extends AbstractPluginActivity {
 //            SharedPreferences pref = this.getSharedPreferences("main_prefs", MODE_PRIVATE);
 //            Log.i(XposedMain.LOG_TAG, "pref"+ pref.);
             SharedPreferences.Editor editor = pref.edit();
-            editor.putString("assign_" + mPattern, "tasker;"+mColor);
+            StringBuilder config=new StringBuilder("tasker;");
+            config.append(mColor);
+            CheckBox cb = findViewById(R.id.suppress_wrong);
+            if(cb.isChecked())
+                config.append("nofail;");
+            editor.putString("assign_" + mPattern, config.toString());
             Log.i(Constants.LOG_TAG, mColor);
             editor.apply();
 

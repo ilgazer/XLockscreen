@@ -3,21 +3,147 @@
 
     <item
         is-multidex="false"
-        jar="C:\Users\Ilgaz\.android\build-cache\37c7def061664d74ab636b7af05975745cb0d2b8\output\jars\classes.jar"
+        jar="/home/ilgaz/.android/build-cache/77bc317139436fa69417474a482ee59f77265349/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="70f23cb87278f89aa51e6f57e8f0fd5266572d95">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_a47f0f1cc13650526dbbdf7e1e1e89784e9c74b8.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/Desktop/code/XLockscreen/localeapi/build/intermediates/bundles/default/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="4a55ffc0cc2dcc04f34b468628404e4c58ddb0db">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_7b905f064613e8d33fc55196b5e23065bce6b96d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/6c5855f9e499868155a925ab3b40c4cd69330451/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="4b746ef0fd46acb5aaf3d9ab9a4cec22c28d3211">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_b62209121ebf085d3788110e16868e6882cefea0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/0be0abd21b7456520975da8c5ffad73c4dcd925e/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_b9078bc1bc4373160641e43394c301cf0c02243a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/a534ac1c1d7a53a3a4142a3f249e7f98657ebd18/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="2687b539e41ee57290c53617af86b7476889d654">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_ce02327cbb8ae77db12bcde19f8c3ee5cd773ac1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/6ac30abfd15dcbde57a0f562098fcddc7652fb56/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="518768f3200963fbfec652f498da2c9d39245234">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_0e40a165eabb69d0e8226b2979f2aba7feda10a1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/c9d5e1c469180f74bd5f521a63d4eb1a5a28881c/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_8ce4dd9d5a926ca60ad2851bb6613aa3181ded59.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/a74b4c87e267fd8984bd0363ab4b17f82f3bbd12/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="7e66fc1e1b8b3389d086a5b0a4e1d9133288851c">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_7bbab1af47739b622990110bb78c4ed12ff0e874.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/1172c38c76462d872b86e7db4e95182aa37ebeb4/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="93c10d68ab5ea070f15782ae6d3a28d1f1d8f45e">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_34696d40e72ad7401b3e2fd63e58a20f23fd03ef.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/728e26aa3b163bc8286ea31ae65b251e672d8781/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="26.0.1"
         sha1="7ed87c7f833e46dacace668e63cb8c4b67cb3172">
-        <dex dex="C:\Users\Ilgaz\AndroidStudioProjects\XLockscreen\app\build\intermediates\pre-dexed\debug\classes_c7ff3825f6d6ed22f4243e40405419878b0fc501.jar" />
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_c33d009247702381f5de17fa2c825223b5eb7ed2.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\Ilgaz\AndroidStudioProjects\XLockscreen\localeapi\build\intermediates\bundles\default\classes.jar"
+        jar="/home/ilgaz/.android/build-cache/62ec6647ffd46841d096b8a79e89f031ca02b640/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
         revision="26.0.1"
-        sha1="a93a69c1a2045ba5ed3ce62e5abb24260ade4d6e">
-        <dex dex="C:\Users\Ilgaz\AndroidStudioProjects\XLockscreen\app\build\intermediates\pre-dexed\debug\classes_bf7bd4ba256cb10a2d77fb825b4f3511bb19a505.jar" />
+        sha1="425c7b17887e5c3f8cbdf67ba171bc246f29b42c">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_e5cc2188e6836bc785cec524ed33ec83f1f4a44b.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/10cc767fbbfd9f5dffe90094431d1c713fed9c4c/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="5cc5ef8347a6bafa14556cbd35230aa9b3431bb0">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_e8b459b1264740c2692b64aafe64056b9d90c667.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/b6848cf02766735eed09bb91f7f7889d1c0884e7/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d6a04527c17597019dad82777c5094a3d60d1c33">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_32b50ead572eb69f41cf6e84f8f5a6e82826dde2.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/25.3.0/support-annotations-25.3.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="dd84903d2e1af25a6081ef9038ad863cb14ca3a0">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/support-annotations-25.3.0_b551f346f34246b3ab884e600ea2cfb633a2eec6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/Android/Sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_4716e891dc20a9aeedea3850b6aefdd4d43bb37a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/home/ilgaz/.android/build-cache/2615cbb0fb68e14a489762bd17bb4842e16cc77e/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.1"
+        sha1="93c1199fcb0a34b980e6fff8350daff62e696ec2">
+        <dex dex="/home/ilgaz/Desktop/code/XLockscreen/app/build/intermediates/pre-dexed/debug/classes_4c481e1f8e4d4409c261f9de6c1698a0990795cd.jar" />
     </item>
 
 </items>
