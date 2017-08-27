@@ -85,7 +85,7 @@ public final class QueryReceiver extends BroadcastReceiver {
         if (numEntered > 0) {
             SharedPreferences.Editor editor = pref.edit();
             setResultCode(com.twofortyfouram.locale.Intent.RESULT_CONDITION_SATISFIED);
-            editor.putInt("ret_" + requestedPattern, numEntered - 1);
+            editor.putInt("ret_" + requestedPattern, 0);
             editor.apply();
         } else {
             setResultCode(com.twofortyfouram.locale.Intent.RESULT_CONDITION_UNSATISFIED);

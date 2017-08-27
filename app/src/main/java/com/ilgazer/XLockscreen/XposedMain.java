@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
@@ -226,7 +227,7 @@ public class XposedMain implements IXposedHookLoadPackage {
                     new XC_MethodHook() {
                         @Override
                         protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                            param.args[0]=PatternListenerDecorator.getProxy(param.args[0]);
+                            param.args[0] = PatternListenerDecorator.getProxy(param.args[0]);
                         }
                     });
 
@@ -249,40 +250,38 @@ public class XposedMain implements IXposedHookLoadPackage {
 
 
         }
-//        XposedHelpers.findAndHookMethod(
-//                "com.android.internal.widget.LockPatternUtils",
-//                lpparam.classLoader, "checkPassword",
-//                new XC_MethodHook() {
-//                    @Override
-//                    protected void beforeHookedMethod(MethodHookParam param) {
-//                        Context c = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
-//                        SharedPreferences pref = new RemotePreferences(c, "com.ilgazer.XLockscreen.preferences", "password");
-//                        String patternEntered = (String) param.args[0];
-//                            log(Constants.LOG_TAG + " PATTERN TIME " + System.currentTimeMillis());
-//                            log(Constants.LOG_TAG + " PATTERN ENTERED " + patternEntered);
-//                            String logPrefs = "";
-//                            for (Map.Entry e : pref.getAll().entrySet()) {
-//                                logPrefs += ("[" + e.getKey().toString() + "," + e.getValue().toString() + "]");
-//                            }
-//                            log(Constants.LOG_TAG + " PREFS " + logPrefs);
-//                            log(Constants.LOG_TAG + " PATTERN ACTION " + pref.getString("assign_" + patternEntered, "null"));
-//                        String[] tasks = pref.getString("assign_" + patternEntered, "null").split(";");
-//                        for (String taskRaw : tasks) {
-//                            String[] task = taskRaw.split(",");
-//                            switch (task[0]) {
-//                                case "tasker":
-//                                    final int numEntered = pref.getInt("ret_" + patternEntered, 0);
-//
-//                                    log(Constants.LOG_TAG + " NUM_ENTERED " + numEntered);
-//                                    SharedPreferences.Editor editor = pref.edit();
-//                                    editor.putInt("ret_" + patternEntered, numEntered + 1);
-//                                    editor.apply();
-//                                    c.sendBroadcast(INTENT_REQUEST_REQUERY);
-//
-//                            }
-//                        }
-//                    }
-//                });
+        XposedHelpers.findAndHookMethod(
+                "com.android.internal.widget.LockPatternUtils",
+                lpparam.classLoader, "checkPassword", String.class,
+                new XC_MethodHook() {
+                    @Override
+                    protected void beforeHookedMethod(MethodHookParam param) {
+                        Context c = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
+                        SharedPreferences pref = new RemotePreferences(c, "com.ilgazer.XLockscreen.preferences", "password");
+                        String patternEntered = (String) param.args[0];
+                        log(Constants.LOG_TAG + " PATTERN TIME " + System.currentTimeMillis());
+                        log(Constants.LOG_TAG + " PATTERN ENTERED " + patternEntered);
+                        String logPrefs = "";
+                        for (Map.Entry e : pref.getAll().entrySet()) {
+                            logPrefs += ("[" + e.getKey().toString() + "," + e.getValue().toString() + "]");
+                        }
+                        log(Constants.LOG_TAG + " PREFS " + logPrefs);
+                        log(Constants.LOG_TAG + " PATTERN ACTION " + pref.getString("assign_" + patternEntered, "null"));
+                        String[] tasks = pref.getString("assign_" + patternEntered, "null").split(";");
+                        for (String taskRaw : tasks) {
+                            String[] task = taskRaw.split(",");
+                            switch (task[0]) {
+                                case "tasker":
+                                    final int numEntered = pref.getInt("ret_" + patternEntered, 0);
+                                    log(Constants.LOG_TAG + " NUM_ENTERED " + numEntered);
+                                    SharedPreferences.Editor editor = pref.edit();
+                                    editor.putInt("ret_" + patternEntered, numEntered + 1);
+                                    editor.apply();
+                                    c.sendBroadcast(INTENT_REQUEST_REQUERY);
+                            }
+                        }
+                    }
+                });
     }
 
     private static String patternStringToPrintable(String pattern) {
