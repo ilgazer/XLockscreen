@@ -62,6 +62,19 @@ public final class EditActivity extends AbstractPluginActivity {
         BundleScrubber.scrub(localeBundle);
 
         setContentView(R.layout.edit_activity);
+        String localeType = localeBundle.getString(PluginBundleManager.BUNDLE_EXTRA_STRING_TYPE);
+        switch(localeType != null ? localeType : ""){
+            case "pattern":
+                Intent patternIntent = new Intent(this, PatternActivity.class);
+                patternIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, localeBundle);
+                startActivityForResult(patternIntent, 1);
+                break;
+            case "password":
+                Intent passwordIntent = new Intent(this, PasswordActivity.class);
+                passwordIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE,localeBundle);
+                startActivityForResult(passwordIntent, 1);
+                break;
+        }
 
         mList = ((ListView) findViewById(android.R.id.list));
         ListAdapter adapter=ArrayAdapter.createFromResource(this,
@@ -75,7 +88,7 @@ public final class EditActivity extends AbstractPluginActivity {
                 switch(out){
                     case "pattern":
                         Intent patternIntent = new Intent(adapterView.getContext(), PatternActivity.class);
-                        patternIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE,localeBundle);
+                        patternIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, localeBundle);
                         startActivityForResult(patternIntent, 1);
                         break;
                     case "password":

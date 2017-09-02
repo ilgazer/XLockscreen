@@ -20,5 +20,6 @@
     <string name="blurb_on">On</string>
     <string name="blurb_off">Off</string>
     <string name="enter_password_text">Enter the password you want to use.</string>
+    <string name="title_activity_main">XLockscreen</string>
 
 </resources>

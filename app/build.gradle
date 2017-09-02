@@ -25,10 +25,10 @@ dependencies {
     compile project(':localeapi')
 
     provided 'de.robv.android.xposed:api:53:sources'
+
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.andrognito.patternlockview:patternlockview:1.0.0'
     compile 'com.crossbowffs.remotepreferences:remotepreferences:0.5'
-    provided 'de.robv.android.xposed:api:53'
     compile 'com.github.yukuku:ambilwarna:2.0.1'
-
+    provided 'de.robv.android.xposed:api:53'
 }
