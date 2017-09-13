@@ -17,7 +17,6 @@ import com.ilgazer.XLockscreen.ui.EditActivity;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -25,13 +24,15 @@ import java.util.Map;
 
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 import static de.robv.android.xposed.XposedBridge.log;
 
 /**
- * Created by ilgaz on 10.08.2017.
+ * Created by Ilgaz Er on 10.08.2017.
+ * All xposed hooks and associated logic is implemented here.
  */
 
 public class XposedMain implements IXposedHookLoadPackage {
@@ -44,9 +45,9 @@ public class XposedMain implements IXposedHookLoadPackage {
     private static Bitmap mBitmapArrowRedUp = null;
     private static boolean useBitmapCircle = true;
     private static HashMap<String, Object> fieldMap = new HashMap<>();
-    private static boolean undoColorChange;
     //Triggers making size seem low via a decorator class on list
     private static boolean hideNextPatternNumber = false;
+    private static boolean resetStealthMode;
 
 //    @Override
 //    public void initZygote(IXposedHookZygoteInit.StartupParam startupParam) throws Throwable {
@@ -121,30 +122,13 @@ public class XposedMain implements IXposedHookLoadPackage {
 //                            if(!Proxy.isProxyClass(mCallback.getClass())) {
 //                                XposedHelpers.setObjectField(viewParent, "mCallback", mCallbackWrapper);
 //                            }
-
-
-                            Paint mPaint = null;
-                            try {
-                                XposedHelpers.findField(patternViewClass, "mBitmapCircleRed");
-                            } catch (NoSuchFieldError e) {
-                                log(Constants.LOG_TAG + "mBitmapCircleRed does not exist.");
-                                useBitmapCircle = false;
-                            }
-                            if (useBitmapCircle) {
-                                mPaint = (Paint) XposedHelpers.getObjectField(param.thisObject, "mPathPaint");
-                                if (mBitmapCircleRed == null) {
-                                    mBitmapCircleRed = ((Bitmap) XposedHelpers.getObjectField(param.thisObject, "mBitmapCircleRed")).copy(Bitmap.Config.ARGB_8888, true);
-                                    mBitmapArrowRedUp = ((Bitmap) XposedHelpers.getObjectField(param.thisObject, "mBitmapArrowRedUp")).copy(Bitmap.Config.ARGB_8888, true);
-                                }
-                            }
 //                            for (Field field : patternViewClass.getDeclaredFields()) {
 //                                fieldMap.put(field.getName(), XposedHelpers.getObjectField(param.thisObject, field.getName()));
 //                            }
                             Context c = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
                             SharedPreferences pref = new RemotePreferences(c, "com.ilgazer.XLockscreen.preferences", "pattern");
-                            ArrayList pattern = (ArrayList) XposedHelpers.getObjectField(param.thisObject, "mPattern");
-                            String patternEnteredRaw = (String) XposedHelpers.callStaticMethod(lockPatternUti̇ls, "patternToString", pattern);
-                            String patternEntered = patternStringToPrintable(patternEnteredRaw);
+                            List pattern = (List) XposedHelpers.getObjectField(param.thisObject, "mPattern");
+                            String patternEntered = patternToString(pattern);
                             log(Constants.LOG_TAG + " PATTERN ENTERED " + patternEntered);
 //                            String logPrefs = "";
 //                            for (Map.Entry e : pref.getAll().entrySet()) {
@@ -179,6 +163,8 @@ public class XposedMain implements IXposedHookLoadPackage {
 //                                        XposedHelpers.callMethod(updateMonitor, "clearFailedUnlockAttempts");
 //                                        log(Constants.LOG_TAG + " Cleared unlock attempts.");
 //                                        break;
+                                    case "null":
+                                        break;
                                     default:
                                         log(Constants.LOG_TAG + " Unrecognised task: " + task[0]);
                                         break;
@@ -188,12 +174,24 @@ public class XposedMain implements IXposedHookLoadPackage {
 //                                        List old=pattern.subList(0, 3);
 //                                        pattern.clear();
 //                                        pattern.addAll(old);
-                            if (useBitmapCircle && mPaint != null) {
+                            try {
+                                XposedHelpers.findField(patternViewClass, "mBitmapCircleRed");
+                            } catch (NoSuchFieldError e) {
+                                log(Constants.LOG_TAG + "mBitmapCircleRed does not exist.");
+                                useBitmapCircle = false;
+                            }
+                            Paint mPaint = (Paint) XposedHelpers.getObjectField(param.thisObject, "mPathPaint");
+                            if (useBitmapCircle) {
+                                if (mBitmapCircleRed == null) {
+                                    mBitmapCircleRed = ((Bitmap) XposedHelpers.getObjectField(param.thisObject, "mBitmapCircleRed")).copy(Bitmap.Config.ARGB_8888, true);
+                                    mBitmapArrowRedUp = ((Bitmap) XposedHelpers.getObjectField(param.thisObject, "mBitmapArrowRedUp")).copy(Bitmap.Config.ARGB_8888, true);
+                                    log(Constants.LOG_TAG + "Copying mBitmapCircleRed.");
+                                }
                                 if (color != null) {
                                     XposedHelpers.setObjectField(param.thisObject, "mBitmapCircleRed", changeBitmapColor(mBitmapCircleRed, color));
                                     XposedHelpers.setObjectField(param.thisObject, "mBitmapArrowRedUp", changeBitmapColor(mBitmapArrowRedUp, color));
                                     mPaint.setAlpha(0x80);
-                                } else if (XposedHelpers.getBooleanField(param.thisObject, "mInStealthMode")) {
+                                } else if (XposedHelpers.getBooleanField(param.thisObject, "resetStealthMode")) {
                                     Bitmap mBitmapCircleEmpty = mBitmapCircleRed.copy(mBitmapCircleRed.getConfig(), true);
                                     Bitmap mBitmapArrowEmpty = mBitmapArrowRedUp.copy(mBitmapArrowRedUp.getConfig(), true);
                                     mBitmapCircleEmpty.eraseColor(Color.TRANSPARENT);
@@ -206,12 +204,26 @@ public class XposedMain implements IXposedHookLoadPackage {
                                     XposedHelpers.setObjectField(param.thisObject, "mBitmapArrowRedUp", mBitmapArrowRedUp);
                                     mPaint.setAlpha(0x80);
                                 }
+                            } else {
+                                boolean mInStealthMode =XposedHelpers.getBooleanField(param.thisObject, "mInStealthMode");
+                                log(Constants.LOG_TAG + " stealth : "+ mInStealthMode);
 
+                                if (color != null) {
+                                    XposedHelpers.setIntField(param.thisObject, "mErrorColor", color);
+//                                    mPaint.setColor(color);
+                                    XposedHelpers.setBooleanField(param.thisObject, "mInStealthMode", false);
+                                    resetStealthMode=mInStealthMode;
+                                }else {
+                                    XposedHelpers.setIntField(param.thisObject, "mErrorColor", Color.RED);
+//                                    mPaint.setColor(Color.WHITE);
+//                                    XposedHelpers.setBooleanField(param.thisObject, "resetStealthMode", resetStealthMode);
+                                }
                             }
                         }
 
                         @Override
                         protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+
 //                            for (String field : fieldMap.keySet()) {
 //                                Object after= XposedHelpers.getObjectField(param.thisObject, field);
 //                                if(after==null)
@@ -219,6 +231,16 @@ public class XposedMain implements IXposedHookLoadPackage {
 //                                else if(!after.equals(fieldMap.get(field)))
 //                                    XposedBridge.log(Constants.LOG_TAG + " Field '" + field + " 'changed from '" +fieldMap.get(field).toString()+"' to '"+ after.toString());
 //                            }
+                        }
+                    });
+
+            XposedHelpers.findAndHookMethod(
+                    patternViewClass, "notifyPatternStarted",
+                    new XC_MethodHook() {
+                        @Override
+                        protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                            if(resetStealthMode)
+                                XposedHelpers.setBooleanField(param.thisObject, "resetStealthMode", true);
                         }
                     });
 
@@ -250,16 +272,18 @@ public class XposedMain implements IXposedHookLoadPackage {
 
 
         }
-        XposedHelpers.findAndHookMethod(
-                "com.android.internal.widget.LockPatternUtils",
-                lpparam.classLoader, "checkPassword", String.class,
-                new XC_MethodHook() {
+        //Use verifyPasswordAndUnlock from com.android.keyguard.KeyguardAbsKeyInputView instead to work around minimum password length.
+        Method checkPassword = null;
+        for (Method method : lockPatternUti̇ls.getDeclaredMethods()) {
+            if("checkPassword".equals(method.getName()))
+                checkPassword=method;
+        }
+        XposedBridge.hookMethod(checkPassword, new XC_MethodHook() {
                     @Override
                     protected void beforeHookedMethod(MethodHookParam param) {
                         Context c = (Context) XposedHelpers.getObjectField(param.thisObject, "mContext");
                         SharedPreferences pref = new RemotePreferences(c, "com.ilgazer.XLockscreen.preferences", "password");
                         String patternEntered = (String) param.args[0];
-                        log(Constants.LOG_TAG + " PATTERN TIME " + System.currentTimeMillis());
                         log(Constants.LOG_TAG + " PATTERN ENTERED " + patternEntered);
                         String logPrefs = "";
                         for (Map.Entry e : pref.getAll().entrySet()) {
@@ -284,18 +308,24 @@ public class XposedMain implements IXposedHookLoadPackage {
                 });
     }
 
-    private static String patternStringToPrintable(String pattern) {
+    private static String patternToString(List pattern) {
         if (pattern == null) {
             return "";
         }
-        final int patternSize = pattern.length();
+        int patternSize = pattern.size();
+        StringBuilder stringBuilder = new StringBuilder();
+        Method getRow = XposedHelpers.findMethodBestMatch(pattern.get(0).getClass(), "getRow");
+        Method getColumn = XposedHelpers.findMethodBestMatch(pattern.get(0).getClass(), "getColumn");
 
-        byte[] res = new byte[patternSize];
-        final byte[] bytes = pattern.getBytes();
         for (int i = 0; i < patternSize; i++) {
-            res[i] = (byte) (bytes[i] + '0');
+            Object dot = pattern.get(i);
+            try {
+                stringBuilder.append(((int)getRow.invoke(dot) * 3 + (int)getColumn.invoke(dot)));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        return new String(res);
+        return stringBuilder.toString();
     }
 
     private static Bitmap changeBitmapColor(Bitmap sourceBitmap, int color) {
@@ -311,7 +341,7 @@ public class XposedMain implements IXposedHookLoadPackage {
     private static class PatternListenerDecorator implements InvocationHandler {
         final Object inner;
 
-        public static Object getProxy(Object o) {
+        static Object getProxy(Object o) {
             return Proxy.newProxyInstance(o.getClass().getClassLoader(), o.getClass().getInterfaces(), new PatternListenerDecorator(o));
         }
 

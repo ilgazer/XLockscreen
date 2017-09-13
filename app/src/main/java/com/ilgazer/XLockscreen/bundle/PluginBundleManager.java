@@ -18,7 +18,7 @@ import android.util.Log;
 
 import com.ilgazer.XLockscreen.Constants;
 
-import java.util.Objects;
+import java.io.Serializable;
 
 /**
  * Class for managing the {@link com.twofortyfouram.locale.Intent#EXTRA_BUNDLE} for this plug-in.
@@ -27,9 +27,21 @@ public final class PluginBundleManager
 {
     public static final String BUNDLE_EXTRA_STRING_LOCK =
             "com.ilgazer.XLockscreen.extra.STRING_LOCK"; //$NON-NLS-1$
+    public static final String BUNDLE_EXTRA_ENUM_TYPE =
+            "com.ilgazer.XLockscreen.extra.ENUM_TYPE"; //$NON-NLS-1$
+    public enum Type{
+        PASSWORD("password"), PATTERN("pattern");
 
-    public static final String BUNDLE_EXTRA_STRING_TYPE =
-            "com.ilgazer.XLockscreen.extra.STRING_TYPE"; //$NON-NLS-1$
+        private final String type;
+        Type(String s){
+         type=s;
+        }
+
+        @Override
+        public String toString() {
+            return type;
+        }
+    }
     /**
      * Type: {@code int}.
      * <p>
@@ -40,7 +52,7 @@ public final class PluginBundleManager
      * easier. For example, suppose a bug is found in how some version of the plug-in stored its Bundle. By
      * having the version, the plug-in can better detect when such bugs occur.
      */
-    public static final String BUNDLE_EXTRA_INT_VERSION_CODE =
+    private static final String BUNDLE_EXTRA_INT_VERSION_CODE =
             "com.ilgazer.XLockscreen.extra.INT_VERSION_CODE"; //$NON-NLS-1$
 
     /**
@@ -133,12 +145,12 @@ public final class PluginBundleManager
      *
      * @return A plug-in bundle.
      */
-    public static Bundle generateBundle(final Context context, final String type, final String code)
+    public static Bundle generateBundle(final Context context, final PluginBundleManager.Type type, final String code)
     {
         final Bundle result = new Bundle();
         result.putString(BUNDLE_EXTRA_STRING_LOCK, code);
         result.putInt(BUNDLE_EXTRA_INT_VERSION_CODE, Constants.getVersionCode(context));
-        result.putString(BUNDLE_EXTRA_STRING_TYPE, type);
+        result.putInt(BUNDLE_EXTRA_ENUM_TYPE, type.ordinal());
         return result;
     }
 

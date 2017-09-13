@@ -25,10 +25,9 @@ import android.widget.ListView;
 import com.ilgazer.XLockscreen.Constants;
 import com.ilgazer.XLockscreen.R;
 import com.ilgazer.XLockscreen.bundle.BundleScrubber;
+import com.ilgazer.XLockscreen.bundle.PluginBundleManager;
 
 import java.util.NoSuchElementException;
-
-import com.ilgazer.XLockscreen.bundle.PluginBundleManager;
 
 
 /**
@@ -62,21 +61,24 @@ public final class EditActivity extends AbstractPluginActivity {
         BundleScrubber.scrub(localeBundle);
 
         setContentView(R.layout.edit_activity);
-        if(localeBundle!=null && localeBundle.containsKey(PluginBundleManager.BUNDLE_EXTRA_STRING_TYPE)) {
-            switch (localeBundle.getString(PluginBundleManager.BUNDLE_EXTRA_STRING_TYPE)) {
-                case "pattern":
+        if(localeBundle!=null && localeBundle.containsKey(PluginBundleManager.BUNDLE_EXTRA_ENUM_TYPE)) {
+            //I do the null check above
+            //noinspection ConstantConditions
+            PluginBundleManager.Type type=PluginBundleManager.Type.values()[localeBundle.getInt(PluginBundleManager.BUNDLE_EXTRA_ENUM_TYPE)];
+            switch (type) {
+                case PATTERN:
                     Intent patternIntent = new Intent(this, PatternActivity.class);
                     patternIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, localeBundle);
                     startActivityForResult(patternIntent, 1);
                     break;
-                case "password":
+                case PASSWORD:
                     Intent passwordIntent = new Intent(this, PasswordActivity.class);
                     passwordIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, localeBundle);
                     startActivityForResult(passwordIntent, 1);
                     break;
             }
         }
-        mList = ((ListView) findViewById(android.R.id.list));
+        mList = findViewById(android.R.id.list);
         ListAdapter adapter=ArrayAdapter.createFromResource(this,
                 R.array.modes, android.R.layout.simple_list_item_1);
         mList.setAdapter(adapter);
@@ -139,7 +141,7 @@ public final class EditActivity extends AbstractPluginActivity {
         } finally {
             if (null != array) {
                 array.recycle();
-                array = null;
+//                array = null;
             }
         }
 
@@ -177,7 +179,7 @@ public final class EditActivity extends AbstractPluginActivity {
         } finally {
             if (null != stateArray) {
                 stateArray.recycle();
-                stateArray = null;
+//                stateArray = null;
             }
         }
     }

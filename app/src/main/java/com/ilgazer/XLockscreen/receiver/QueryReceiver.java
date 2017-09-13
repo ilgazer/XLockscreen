@@ -17,18 +17,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.preference.PreferenceManager;
 import android.util.Log;
-
-import java.util.Locale;
-import java.util.Map;
 
 import com.crossbowffs.remotepreferences.RemotePreferences;
 import com.ilgazer.XLockscreen.Constants;
 import com.ilgazer.XLockscreen.bundle.BundleScrubber;
 import com.ilgazer.XLockscreen.bundle.PluginBundleManager;
 import com.ilgazer.XLockscreen.ui.EditActivity;
+
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * This is the "query" BroadcastReceiver for a Locale Plug-in condition.
@@ -37,6 +35,7 @@ import com.ilgazer.XLockscreen.ui.EditActivity;
  * @see com.twofortyfouram.locale.Intent#EXTRA_BUNDLE
  */
 public final class QueryReceiver extends BroadcastReceiver {
+
 
     /**
      * @param c      {@inheritDoc}.
@@ -66,11 +65,15 @@ public final class QueryReceiver extends BroadcastReceiver {
 //        com.twofortyfouram.locale.Intent.
 //        if (PluginBundleManager.isBundleValid(bundle)){
         final String requestedPattern = bundle.getString(PluginBundleManager.BUNDLE_EXTRA_STRING_LOCK);
-        final String requestedType = bundle.getString(PluginBundleManager.BUNDLE_EXTRA_STRING_TYPE);
+        final PluginBundleManager.Type requestedType = PluginBundleManager.Type.values()[bundle.getInt(PluginBundleManager.BUNDLE_EXTRA_ENUM_TYPE)];
 
         Log.i(Constants.LOG_TAG, "requested " + requestedType + " : " + requestedPattern);
 
-        SharedPreferences pref = new RemotePreferences(c, "com.ilgazer.XLockscreen.preferences", requestedType);
+        if (requestedType == null) {
+            Log.e(Constants.LOG_TAG, "requestedType is null. Discarding query.");
+            return;
+        }
+        SharedPreferences pref = new RemotePreferences(c, "com.ilgazer.XLockscreen.preferences", requestedType.toString());
 //        todo figure out why getSharedPrefs desyncs.
 //        SharedPreferences pref = c.getSharedPreferences("main_prefs", Context.MODE_PRIVATE);
                 //PreferenceManager.getSharedPreferences

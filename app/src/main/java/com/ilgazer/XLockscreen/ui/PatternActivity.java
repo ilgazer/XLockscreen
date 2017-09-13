@@ -154,7 +154,7 @@ public final class PatternActivity extends AbstractPluginActivity {
              * stored in the Bundle, as Locale's classloader will not recognize it).
              */
             final Bundle resultBundle =
-                    PluginBundleManager.generateBundle(getApplicationContext(), "pattern", mPattern);
+                    PluginBundleManager.generateBundle(getApplicationContext(), PluginBundleManager.Type.PATTERN, mPattern);
             resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, resultBundle);
 
                 /*

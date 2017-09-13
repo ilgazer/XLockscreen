@@ -101,7 +101,7 @@ public final class PasswordActivity extends AbstractPluginActivity {
              * stored in the Bundle, as Locale's classloader will not recognize it).
              */
             final Bundle resultBundle =
-                    PluginBundleManager.generateBundle(getApplicationContext(), "password", mPassword);
+                    PluginBundleManager.generateBundle(getApplicationContext(), PluginBundleManager.Type.PASSWORD, mPassword);
             resultIntent.putExtra(com.twofortyfouram.locale.Intent.EXTRA_BUNDLE, resultBundle);
 
                 /*
